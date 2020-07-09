@@ -1,0 +1,30 @@
+{
+  "name": "wallet_apis",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.7.7",
+    "mongoose-plugin-autoinc": "^1.1.9",
+    "morgan": "1.9.1",
+    "msg91": "0.0.6",
+    "multer": "1.4.2",
+    "multer-s3-transform": "2.3.2",
+    "nodemailer": "6.4.2",
+    "nodemon": "^1.19.4",
+    "object-path": "^0.11.4",
+    "standard-http-error": "2.0.1",
+    "uniqid": "^5.2.0"
+  }
+}

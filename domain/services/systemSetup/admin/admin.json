@@ -1,0 +1,16 @@
+{
+  "dev": [
+    {
+      "email":"rashmi@emproto.com",
+      "name":"Rashmi",
+      "phoneNumber":"9886445769",
+      "password":"emproto123"
+    },
+    {
+      "email":"hr.rashmi@gmail.com",
+      "name":"Rashmi",
+      "phoneNumber":"9886445769",
+      "password":"emproto123"
+    }
+  ]
+}
