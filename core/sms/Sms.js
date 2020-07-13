@@ -14,7 +14,7 @@ module.exports = class Sms {
 
     this.otpSender = new SendOtp(
       kSMSApiKey,
-      `<#> Welcome to the World of Onboardify! {{otp}} is your OTP. ${encodedHash}`
+      `<#> Welcome to the Expense Tracker {{otp}} is your OTP. ${encodedHash}`
     );
     this.otpSender.setOtpExpiry("15"); //15 minutes
 

@@ -1,5 +1,6 @@
 const Schema = require('mongoose').Schema;
 const mongoose = require('mongoose');
+const GenderTyEnum=require('../domain/enumerations/GenderTypeEnum')
 
 const UserSchema = Schema({
   name: {
@@ -16,6 +17,15 @@ const UserSchema = Schema({
   phoneNumber: {
     type: String,
     required: true
+  },
+  gender:{
+    type: Number,
+    enum: [
+      GenderTyEnum.Male,
+      GenderTyEnum.Female,
+      GenderTyEnum.Others
+    ],
+    default: GenderTyEnum.Female,
   },
   isLoggedIn: {
     type: Boolean,

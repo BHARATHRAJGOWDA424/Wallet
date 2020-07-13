@@ -4,13 +4,15 @@
       "email":"rashmi@emproto.com",
       "name":"Rashmi",
       "phoneNumber":"9886445769",
-      "password":"emproto123"
+      "password":"emproto123",
+      "gender":1
     },
     {
       "email":"hr.rashmi@gmail.com",
       "name":"Rashmi",
       "phoneNumber":"9886445769",
-      "password":"emproto123"
+      "password":"emproto123",
+      "gender":1
     }
   ]
 }
