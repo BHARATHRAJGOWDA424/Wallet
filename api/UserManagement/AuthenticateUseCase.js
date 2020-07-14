@@ -4,7 +4,7 @@ const AuthControlFactory = require('../../core/authControl/AuthControlFactory');
 const UserRepository = require('../../repositories/UserRepository')
 var ObjectPath = require("object-path");
 const HttpError = require('standard-http-error')
-
+const RegistrationStatus=require('../../domain/enumerations/RegistrationStatus')
 module.exports = class AuthenticateUseCase extends BaseUseCase {
 
     constructor(request, response, hashControl, authControl, userRepository) {
@@ -46,9 +46,14 @@ module.exports = class AuthenticateUseCase extends BaseUseCase {
             if (email) {
                 user = await this.userRepository.findOneBySelectingPassword({ email: email.toLowerCase() })
             }
+            
             if (user === null) {
                 throw new HttpError(401, "user not found");
             }
+            if(user.status===RegistrationStatus.Registered){
+                throw new HttpError(401, "User Registration is Incomplete");
+            }
+
             let isPasswordMatched = await this.hashControl.compare(body.password, user.password)
             if (!isPasswordMatched) {
                 throw new HttpError(400, "Wrong password")
