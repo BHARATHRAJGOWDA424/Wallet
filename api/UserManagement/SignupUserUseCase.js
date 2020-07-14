@@ -5,16 +5,17 @@ const HttpError = require('standard-http-error')
 const NotificationService = require('../../domain/services/notification/NotificationService');
 const ObjectPath = require("object-path");
 const SmsService = require('../../core/sms/Sms')
+const DateUtils = require('../../core/dateUtils/DateUtils');
 const UserRepository = require('../../repositories/UserRepository')
 module.exports = class SignupUserUseCase extends BaseUseCase {
-    constructor(request, response,hashControl, validationUtils, notificationService, userRepository) {
+    constructor(request, response,hashControl, validationUtils, notificationService, userRepository,dateUtils) {
         super(request, response);
         this.hashControl = hashControl
         this.validationUtils = validationUtils;
         this.notificationService = notificationService;
         this.userRepository = userRepository;
-        this.smsService = SmsService.create()
-
+        this.smsService = SmsService.create();
+        this.dateUtils = dateUtils
     }
 
     validate(name, email, phoneNumber, password) {
@@ -62,9 +63,14 @@ module.exports = class SignupUserUseCase extends BaseUseCase {
             let addedTenant = await this.userRepository.add(user)            
             let hashedPassword = await this.hashControl.hash(password)
             addedTenant.password = hashedPassword
-            addedTenant.save()
             let otp = Math.floor(100000 + Math.random() * 900000);
             await this.smsService.sendOTP(phoneNumber, otp)
+            let hashedOtp = await this.hashControl.hash(`${otp}`)
+            addedTenant.otp = {
+                otp: hashedOtp,
+                expiredAt: this.dateUtils.dateByMinutes(new Date, 15)
+            }
+            addedTenant.save()
             return {
                 message: 'User Added Successfully',
                 addedTenant
@@ -88,6 +94,7 @@ module.exports = class SignupUserUseCase extends BaseUseCase {
             new ValidationUtils(),
             new NotificationService(),
             new UserRepository(),
+            new DateUtils()
         );
         return useCase;
     }

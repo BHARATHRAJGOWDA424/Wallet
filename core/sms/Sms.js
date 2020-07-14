@@ -44,20 +44,20 @@ module.exports = class Sms {
     });
   }
 
-  // async verifyOTP(to, otp) {
+  async verifyOTP(to, otp) {
 
-  //   to = `+91${to}`
-  //   return new Promise((resolve, reject) => {
-  //     this.otpSender.verify(to, otp, function (err, data, response) {
-  //       if (err) return reject(err);
-  //       if (data.type == "success") {
-  //         resolve(data);
-  //       } else {
-  //         reject(Error("Invalid OTP"));
-  //       }
-  //     });
-  //   });
-  // }
+    to = `+91${to}`
+    return new Promise((resolve, reject) => {
+      this.otpSender.verify(to, otp, function (err, data, response) {
+        if (err) return reject(err);
+        if (data.type == "success") {
+          resolve(data);
+        } else {
+          reject(Error("Invalid OTP"));
+        }
+      });
+    });
+  }
 
   static create() {
     let smsService = new Sms(process.env.kSMSApiKey, process.env.kSMSSenderId, process.env.kAndroidKeyStoreHash)

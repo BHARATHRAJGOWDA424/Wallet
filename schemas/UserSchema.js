@@ -1,7 +1,7 @@
 const Schema = require('mongoose').Schema;
 const mongoose = require('mongoose');
-const GenderTyEnum=require('../domain/enumerations/GenderTypeEnum')
-const RegistrationStatus=require('../domain/enumerations/RegistrationStatus')
+const GenderTyEnum = require('../domain/enumerations/GenderTypeEnum')
+const RegistrationStatus = require('../domain/enumerations/RegistrationStatus')
 
 const UserSchema = Schema({
   name: {
@@ -19,7 +19,7 @@ const UserSchema = Schema({
     type: String,
     required: true
   },
-  gender:{
+  gender: {
     type: Number,
     enum: [
       GenderTyEnum.Male,
@@ -28,9 +28,13 @@ const UserSchema = Schema({
     ],
     default: GenderTyEnum.Female,
   },
-  status:{
-    type:Number,
-    enum:[
+  otp: {
+    otp: String,
+    expiredAt: Date,
+  },
+  status: {
+    type: Number,
+    enum: [
       RegistrationStatus.Active,
       RegistrationStatus.Registered
     ],
