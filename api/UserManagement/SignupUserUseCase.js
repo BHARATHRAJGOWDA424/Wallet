@@ -1,13 +1,15 @@
 const BaseUseCase = require('../BaseUseCase');
 const ValidationUtils = require('../../core/validationUtils/validationUtils')
+const HashControlFactory = require('../../core/hashControl/HashControlFactory');
 const HttpError = require('standard-http-error')
 const NotificationService = require('../../domain/services/notification/NotificationService');
 const ObjectPath = require("object-path");
-const SmsService=require('../../core/sms/Sms')
+const SmsService = require('../../core/sms/Sms')
 const UserRepository = require('../../repositories/UserRepository')
 module.exports = class SignupUserUseCase extends BaseUseCase {
-    constructor(request, response, validationUtils, notificationService, userRepository) {
+    constructor(request, response,hashControl, validationUtils, notificationService, userRepository) {
         super(request, response);
+        this.hashControl = hashControl
         this.validationUtils = validationUtils;
         this.notificationService = notificationService;
         this.userRepository = userRepository;
@@ -57,18 +59,12 @@ module.exports = class SignupUserUseCase extends BaseUseCase {
             let phoneNumber = ObjectPath.get(user, "phoneNumber").trim()
             let password = ObjectPath.get(user, "password")
             this.validate(name, email, phoneNumber, password)
-
-            // let user = await this.authenticate()
-            // await this.authorize([Role.SuperAdmin, Role.Admin], user)
-
-            let addedTenant = await this.userRepository.add(user)
+            let addedTenant = await this.userRepository.add(user)            
+            let hashedPassword = await this.hashControl.hash(password)
+            addedTenant.password = hashedPassword
+            addedTenant.save()
             let otp = Math.floor(100000 + Math.random() * 900000);
             await this.smsService.sendOTP(phoneNumber, otp)
-            // let encodedTenant = encodeURI(`${addedTenant.accountOwnerName}/${addedTenant.organizationName}/${addedTenant.email}/${addedTenant.phoneNumber}`)
-            // let inviteTenantLink = process.env.kAdminAppBaseUrl + "/verify-email/" + `${encodedTenant}/${addedTenant.administration.invitationLink}`
-            // await this.notificationService.sendEmail(addedTenant.accountOwnerName, addedTenant.email, "Welcome to onboardify", inviteTenantLink, null, `Almost done, ! To complete your Onboardify sign up, we just need to verify your email address: ${addedTenant.email} .`, 'Verify email address');
-
-
             return {
                 message: 'User Added Successfully',
                 addedTenant
@@ -83,13 +79,15 @@ module.exports = class SignupUserUseCase extends BaseUseCase {
     }
 
     static create(request, response) {
-
+        let hashControlFactory = new HashControlFactory()
+        let hashControl = hashControlFactory.create()
         let useCase = new SignupUserUseCase(
             request,
             response,
+            hashControl,
             new ValidationUtils(),
             new NotificationService(),
-            new UserRepository()
+            new UserRepository(),
         );
         return useCase;
     }

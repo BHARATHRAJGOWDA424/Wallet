@@ -1,7 +1,7 @@
 const BaseUseCase = require('../BaseUseCase');
 const HashControlFactory = require('../../core/hashControl/HashControlFactory');
 const AuthControlFactory = require('../../core/authControl/AuthControlFactory');
-const UserRepository =require('../../repositories/UserRepository')
+const UserRepository = require('../../repositories/UserRepository')
 var ObjectPath = require("object-path");
 const HttpError = require('standard-http-error')
 
@@ -40,59 +40,22 @@ module.exports = class AuthenticateUseCase extends BaseUseCase {
         try {
             this.validate()
             const body = this.request.body
-            const { email, password } = body;
+            const { email } = body;
             let user
             let token
             if (email) {
-                user = await this.userRepository.findOneBySelectingPassword({ email: email.toLowerCase()})
-            }    
+                user = await this.userRepository.findOneBySelectingPassword({ email: email.toLowerCase() })
+            }
             if (user === null) {
                 throw new HttpError(401, "user not found");
             }
-            // await this.authorize([Role.Admin, Role.Tenant, Role.ProductManager, Role.ProductOwner], user)
-
-            // if (user.role == Role.Tenant && user.productManagement.status == TenantStatus.Invited) {
-            //     throw new HttpError(401, "Please accept the invitation sent over email")
-            // }
-
-            // if (user.role == Role.Tenant && user.productManagement.status == TenantStatus.Blocked) {
-            //     throw new HttpError(401, "Your account is currently blocked, \n Please Contact Administrator")
-            // }
-
-            // if (user.role == Role.Tenant && user.productManagement.status == TenantStatus.Registered) {
-            //     throw new HttpError(401, "Please check your email to complete your registration")
-            // }
-
-            // if (user.role == Role.ProductManager && user.productManagement.status == ProductManagerStatus.Invited) {
-            //     throw new HttpError(401, "Please accept the invitation sent over email")
-            // }
-
-            // if (user.role == Role.ProductManager && user.productManagement.status == ProductManagerStatus.Blocked) {
-            //     throw new HttpError(401, "Your account is currently blocked, \n Please Contact Administrator")
-            // }
-
-            // if (user.role == Role.ProductManager && user.productManagement.status == ProductManagerStatus.Registered) {
-            //     throw new HttpError(401, "Please check your email to complete your registration")
-            // }
-            // if (user.role == Role.ProductOwner && user.productManagement.status == ProductOwnerStatus.Invited){
-            //     throw new HttpError(401, "Please accept the invitation sent over email")
-            // }
-                
-            // if (user.role == Role.ProductOwner && user.productManagement.status == ProductOwnerStatus.Blocked){
-            //     throw new HttpError(401, "Your account is currently blocked, \n Please Contact Administrator")
-            // }
-                
-            // if (user.role == Role.ProductOwner && user.productManagement.status == ProductOwnerStatus.Registered){
-            //     throw new HttpError(401, "Please check your email to complete your registration")
-            // }
-
             let isPasswordMatched = await this.hashControl.compare(body.password, user.password)
             if (!isPasswordMatched) {
                 throw new HttpError(400, "Wrong password")
             }
-            if(true){
-                token = this.authControl.sign({ id: user._id,email: user.email}, 'wallet_secret', { expiresIn: "1d" })
-            }else{
+            if (true) {
+                token = this.authControl.sign({ id: user._id, email: user.email }, 'wallet_secret', { expiresIn: "1d" })
+            } else {
                 token = this.authControl.sign({ id: user._id, tenantId: tenant._id.toString(), email: user.email, organizationName: user.organizationName ? user.organizationName : user.tenant, role: user.role }, process.env.kJWTSecret, { expiresIn: "1d" })
             }
             user.loginToken = token
@@ -104,8 +67,8 @@ module.exports = class AuthenticateUseCase extends BaseUseCase {
                 user
             }
         } catch (error) {
-            console.log(error,'err');
-            
+            console.log(error, 'err');
+
             throw error
         }
 
