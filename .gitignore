@@ -1,0 +1,43 @@
+# Add any directories, files, or patterns you don't want to be tracked by version control
+lib-cov
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+*.swp
+
+pids
+logs
+results
+tmp
+certificates
+
+
+#Build
+public/css/main.css
+
+# API keys and secrets
+.env
+.env.prod
+
+# Dependency directory
+node_modules
+dist
+bower_components
+
+# Editors
+.idea
+*.iml
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Ignore built ts files
+dist/**/*
+
+# Ignore built ts files
+public/**/*
