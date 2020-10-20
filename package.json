@@ -25,7 +25,7 @@
     "multer-s3-transform": "2.3.2",
     "nodemailer": "6.4.2",
     "nodemon": "^1.19.4",
-    "object-path": "^0.11.4",
+    "object-path": "^0.11.5",
     "sendotp": "^1.2.9",
     "standard-http-error": "2.0.1",
     "uniqid": "^5.2.0"
